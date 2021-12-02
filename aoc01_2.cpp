@@ -5,7 +5,7 @@
 
 int main()
 {
-	std::ifstream input("input.txt");
+	std::ifstream input("aoc01.txt");
 	int n, last_sum = -1, num_increases = 0;
 	std::list<int> sliding_window;
 	while (input >> n) {

@@ -3,7 +3,7 @@
 
 int main()
 {
-	std::ifstream input("input.txt");
+	std::ifstream input("aoc01.txt");
 	int n, last_n = -1, num_increases = 0;
 	while (input >> n) {
 		if (last_n != -1 && n > last_n)
