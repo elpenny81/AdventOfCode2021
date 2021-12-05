@@ -1,10 +1,10 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <sstream>
 #include <vector>
 #include <cassert>
 #include <map>
+#include <algorithm>
 
 #include "toolbox.h"
 
@@ -15,12 +15,9 @@ struct Point {
     Point(int _x, int _y) : x(_x), y(_y) {}
     
     static Point parse(const std::string& s) {
-        Point point;
         auto data = tools::string_split(s, ",");
         assert(data.size() == 2);
-        point.x = std::strtol(data.at(0).c_str(), nullptr, 0);
-        point.y = std::strtol(data.at(1).c_str(), nullptr, 0);
-        return point;
+        return { std::strtol(data.at(0).c_str(), nullptr, 0), std::strtol(data.at(1).c_str(), nullptr, 0) };
     }
 
     bool operator==(const Point& other) const { return x == other.x && y == other.y; }
@@ -30,48 +27,35 @@ struct Point {
 struct Line { 
     Point p1, p2; 
 
+    Line() = default;
+    Line(const Point& _p1, const Point& _p2) : p1(_p1), p2(_p2) {}
+
     static Line parse(const std::string &line) {
-        Line ret;
-        auto tokens = tools::string_split(line, " ");
-        assert(tokens.size() == 3);
-        ret.p1 = Point::parse(tokens.at(0));
-        ret.p2 = Point::parse(tokens.at(2));
-        return ret;
+        auto tokens = tools::string_split(line, " -> ");
+        assert(tokens.size() == 2);
+        return { Point::parse(tokens.at(0)),
+                 Point::parse(tokens.at(1)) };
     }
 
     bool is_horizontal() const { return p1.y == p2.y; }
     bool is_vertical() const { return p1.x == p2.x; }
+    bool is_diagonal() const { return !is_horizontal() && !is_vertical(); }
     std::vector<Point> to_points() const {
         std::vector<Point> points;
-        if (is_horizontal()) {
-            int i = p1.x;
-            while (true) {
-                points.push_back(Point(i, p1.y));
-                if (i == p2.x)
-                    break;
-                i += (i > p2.x) ? (-1) : (1);
-            }
-        }
-        else
-        if (is_vertical()) {
-            int i = p1.y;
-            while (true) {
-                points.push_back(Point(p1.x, i));
-                if (i == p2.y)
-                    break;
-                i += (i > p2.y) ? (-1) : (1);
-            }
-        }
-        else {
-            int i = p1.x, j = p1.y;
-            while (true) {
-                points.push_back(Point(i, j));
-                if (i == p2.x)
-                    break;
-                i += (i > p2.x) ? (-1) : (1);
-                j += (j > p2.y) ? (-1) : (1);
-            }
-        }
+
+        auto f = [&points, this](int x, int y, int dx, int dy, auto &&f) {
+            points.push_back({ x, y });
+            if (x == p2.x && y == p2.y)
+                return;
+            f(x + dx, y + dy, dx, dy, f);
+        };
+
+        int x = p1.x, y = p1.y;
+        int dx = is_horizontal() || is_diagonal() ? (x < p2.x) ? 1 : -1 : 0;
+        int dy = is_vertical()   || is_diagonal() ? (y < p2.y) ? 1 : -1 : 0;
+
+        if (dx || dy)
+            f(x, y, dx, dy, f);
 
         return points;
     }
@@ -84,32 +68,23 @@ static std::vector<Line> read_lines(std::ifstream& in)
 {
     std::vector<Line> ret;
     std::string s;
-    while (std::getline(in, s)) {
-        auto line = Line::parse(s);
-        ret.push_back(line);
-    }
+    while (std::getline(in, s))
+        ret.push_back(Line::parse(s));
     return ret;
 }
 
 static std::map<Point, int> get_points_map(const std::vector<Line> &lines)
 {
     std::map<Point, int> map;
-    for (const auto& line : lines) {
-        auto points = line.to_points();
-        for (auto& p : points)
+    for (const auto& line : lines)
+        for (auto& p : line.to_points())
             map[p]++;
-    }
     return map;
 }
 
 static int get_num_overlaps(const std::map<Point, int>& map)
 {
-    int n = 0;
-    for (auto& [point, count] : map) {
-        if (count > 1)
-            n++;
-    }
-    return n;
+    return static_cast<int>(std::count_if(map.begin(), map.end(), [](auto entry) { return entry.second > 1; }));
 }
 
 int main() 
