@@ -1,7 +1,4 @@
-﻿# CMakeList.txt: CMake-Projektdatei der obersten Ebene. Führen Sie hier die globale Konfiguration aus,
-# und schließen Sie Unterprojekte ein.
-#
-cmake_minimum_required (VERSION 3.8)
+﻿cmake_minimum_required (VERSION 3.8)
 
 project ("AdventOfCode2021")
 
@@ -16,6 +13,8 @@ add_executable(AoC_03_1 aoc03_1.cpp)
 add_executable(AoC_03_2 aoc03_2.cpp)
 add_executable(AoC_04_1 aoc04_1.cpp)
 add_executable(AoC_04_2 aoc04_2.cpp)
+add_executable(AoC_05_1 aoc05_1.cpp toolbox.h)
+add_executable(AoC_05_2 aoc05_2.cpp toolbox.h)
 
 configure_file(input_files/aoc01.txt ${CMAKE_BINARY_DIR}/aoc01.txt COPYONLY)
 configure_file(input_files/aoc01_sample.txt ${CMAKE_BINARY_DIR}/aoc01_sample.txt COPYONLY)
@@ -25,3 +24,5 @@ configure_file(input_files/aoc03.txt ${CMAKE_BINARY_DIR}/aoc03.txt COPYONLY)
 configure_file(input_files/aoc03_sample.txt ${CMAKE_BINARY_DIR}/aoc03_sample.txt COPYONLY)
 configure_file(input_files/aoc04.txt ${CMAKE_BINARY_DIR}/aoc04.txt COPYONLY)
 configure_file(input_files/aoc04_sample.txt ${CMAKE_BINARY_DIR}/aoc04_sample.txt COPYONLY)
+configure_file(input_files/aoc05.txt ${CMAKE_BINARY_DIR}/aoc05.txt COPYONLY)
+configure_file(input_files/aoc05_sample.txt ${CMAKE_BINARY_DIR}/aoc05_sample.txt COPYONLY)
