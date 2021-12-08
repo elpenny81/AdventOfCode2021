@@ -18,4 +18,9 @@ namespace tools {
 
         return ret;
     }
+
+    template <typename T, typename U>
+    static bool contains(const T& cont, U elem) {
+        return std::find(cont.begin(), cont.end(), elem) != cont.end();
+    }
 }
