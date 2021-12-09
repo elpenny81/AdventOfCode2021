@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include <numeric>
+#include <cmath>
 
 namespace {
 
@@ -20,7 +21,7 @@ namespace {
 
     double mean(std::vector<int>& numbers)
     {
-        return static_cast<double>(std::accumulate(numbers.begin(), numbers.end(), 0.0)) 
+        return static_cast<double>(std::accumulate(numbers.begin(), numbers.end(), 0.0))
             / std::distance(numbers.begin(), numbers.end());
     }
 

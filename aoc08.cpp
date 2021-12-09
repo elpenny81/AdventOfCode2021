@@ -71,8 +71,8 @@ namespace {
             numbers[8] = tmp[7].at(0);
 
             segments[0] = func_remove(numbers[7], numbers[1]).at(0);
-            
-            for (auto &it = tmp[5].begin(); it != tmp[5].end(); it++) {
+
+            for (auto it = tmp[5].begin(); it != tmp[5].end(); it++) {
                 if (func_contain(*it, numbers[1])) {
                     numbers[3] = *it;
                     tmp[5].erase(it);
@@ -84,7 +84,7 @@ namespace {
             segments[6] = func_remove(numbers[4], numbers[1] + segments[5]).at(0);
 
             // now, we can find number 5 (5 segments, including segment 5)
-            for (auto& it = tmp[5].begin(); it != tmp[5].end(); it++) {
+            for (auto it = tmp[5].begin(); it != tmp[5].end(); it++) {
                 if ((*it).find(segments[5]) != std::string::npos) {
                     numbers[5] = *it;
                     tmp[5].erase(it);
