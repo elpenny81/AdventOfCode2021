@@ -23,4 +23,12 @@ namespace tools {
     static bool contains(const T& cont, U elem) {
         return std::find(cont.begin(), cont.end(), elem) != cont.end();
     }
+
+    template<typename T, typename E>
+    static int64_t index_of(const T& cont, const E& elem) {
+        T::const_iterator it;
+        if ((it = std::find(cont.begin(), cont.end(), elem)) != cont.end())
+            return std::distance(cont.begin(), it);
+        return -1;
+    }
 }
